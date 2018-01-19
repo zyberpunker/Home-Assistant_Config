@@ -1,0 +1,342 @@
+http:
+  api_password: !secret hass_pass
+  trusted_networks:
+    - 127.0.0.1
+    - 192.168.0.0/23
+    - ::1
+
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # C for Celcius, F for Fahrenheit
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Stockholm
+  latitude: 57.688728
+  longitude: 11.659435
+  elevation: 5
+
+  customize: !include customize.yaml
+
+cloud:
+
+config:  
+
+#    unit_of_measurement: °C
+
+#google:
+#  client_id: !secret google_clientid
+#  client_secret: !secret google_client_secret
+#  track_new_calendar: false
+
+influxdb:
+  host: 192.168.0.4
+  port: 8086
+  database: grafana
+  username: !secret influx_user
+  password: !secret influx_pass
+  ssl: false
+  verify_ssl: true
+  tags:
+    instance: prod
+    source: hass
+
+mqtt:
+  broker: 192.168.0.4
+  port: 1883
+  protocol: 3.1
+  username: !secret mqtt_user
+  password: !secret mqtt_pass
+  discovery: true
+  client_id: home-assistant-1
+  keepalive: 60
+  birth_message:
+    topic: 'hass/status'
+    payload: 'online'
+    qos: 1
+    retain: true
+  will_message:
+    topic: 'hass/status'
+    payload: 'offline'
+    qos: 1
+    retain: true
+
+#device_tracker:
+#  - platform: unifi
+#    username: !secret devtrack_user
+#    password: !secret devtrack_pass
+#    host: 192.168.0.20
+#    verify_ssl: false
+#    consider_home: 180
+
+#logger:
+#  default: info
+#  logs:
+#    homeassistant.components.tellduslive: debug
+#    homeassistant.components.sensor.tellduslive: debug
+#    homeassistant.components.switch.tellduslive: debug
+
+tellstick:
+
+# Enables the frontend
+frontend:
+
+# Enables support for tracking state changes over time.
+history:
+
+# Discover some devices automatically
+discovery:
+
+# View all events in a logbook
+logbook:
+
+# Track the sun
+sun:
+
+recorder:
+
+# Show links to resources in log and frontend
+#introduction:
+
+# Allows you to issue voice commands from the frontend
+conversation:
+
+ffmpeg:
+  ffmpeg_bin: /usr/bin/avconv
+
+camera 2:
+  - platform: ffmpeg
+    ffmpeg_bin: /usr/bin/avconv
+    input: -rtsp_transport tcp -i rtsp://192.168.0.233/unicast
+    name: cam1
+    extra_arguments: -pred 1 -q:v 2
+
+camera:
+  - platform: mjpeg
+    name: Bjorko Live
+    still_image_url: http://www.bohus-bjorko.se/assets/hamn.jpg
+    mjpeg_url: http://aquavera.webhop.biz/cam_2.cgi
+
+camera 3:
+  - platform: ffmpeg
+    ffmpeg_bin: /usr/bin/avconv
+    input: -rtsp_transport udp -i rtsp://admin:123@192.168.0.50:554/onvif1
+    name: cam_back
+    extra_arguments: -pred 1
+hue:
+  bridges:
+    - host: 192.168.0.100
+      filename: phue.conf
+
+switch:
+  - platform: tellstick
+
+sensor:
+  - platform: tellstick
+    151: Vinden
+    154: Förråd_fram 
+    166: Ute
+    21: Grunden
+    222: Arbetsrummet
+    51: Vardagsrummet
+    245: Gustavsrum
+    167: Jästunna
+    150: Grunden_2
+    199: Kaninbur
+    # Set only_named to 1 to hide all sensors that you did not mention.
+    only_named: 1
+
+sensor 2:
+  platform: yr
+  monitored_conditions:
+    - windSpeed
+    - windDirection
+    - fog
+    - cloudiness
+
+sensor 3:
+  platform: mqtt
+  state_topic: 'hass/blommor/blomma2'
+  name: 'Blomma 2'
+  unit_of_measurement: '%'
+  value_template: '{{ value_json.wetness }}'
+
+sensor 4:
+  platform: wunderground
+  api_key: !secret wunderground_api_key
+  lang: SW
+  pws_id: ICKERMUN2
+  value_template: "{{(sensor.pws_wind_kph | float *  0.27777777777778)  | round(2) }}"
+  monitored_conditions:
+    - precip_1hr_metric
+    - precip_today_metric
+    - pressure_mb
+    - pressure_trend
+    - UV
+    - visibility_km
+    - weather
+    - wind_dir
+    - wind_gust_kph
+    - wind_kph
+    - wind_string
+
+sensor 5:
+  platform: template
+  sensors:
+    vind:
+      value_template: '{{ states.sensor.pws_wind_kph.state | multiply(0.2777) | round(1)}}'
+      unit_of_measurement: 'm/s'
+
+    byvind:
+      value_template: '{{ states.sensor.pws_wind_gust_kph.state | multiply(0.2777) | round(1)}}'
+      unit_of_measurement: 'm/s'
+
+# All dimmers will be picked up as lights.
+light 2:
+  platform: tellstick
+
+#light 3:
+#  - platform: flux_led
+#    devices:
+#      192.168.0.101:
+#        name: LED_Hall
+
+automation: !include automations.yaml
+scene: !include scene.yaml
+
+media_player:
+  - platform: plex
+
+group:
+  Scenes:
+   - scene.slack_allt
+   - scene.natt
+   - scene.kvall
+   - scene.tand_allt
+  Bloom:
+   - light.hue_bloom_1
+   - light.hue_bloom_2
+  Livingroom window:
+   - switch.vardagsrum_fonster_1
+   - switch.vardagsrum_fonster_2
+  Ute Klimat:
+   - sensor.pws_weather
+   - sensor.ute_temperature
+   - sensor.ute_humidity
+   - sensor.yr_fog
+   - sensor.pws_wind_dir
+   - sensor.vind
+   - sensor.byvind
+   - sensor.yr_cloudiness
+   - sensor.pws_precip_1hr_metric
+   - sensor.pws_pressure_mb
+   - sensor.pws_uv
+  Vardagsrummet:
+   - group.livingroom_window
+   - light.golvlampa
+   - group.bloom
+  Vardagsrummet Klimat: 
+   - sensor.vardagsrummet_temperature
+   - sensor.vardagsrummet_humidity
+  Arbetsrum:
+   - light.ceiling
+   - light.window
+  Arbetsrum Klimat:
+   - sensor.arbetsrummet_temperature
+   - sensor.arbetsrummet_humidity
+  Hall:
+   - switch.hall_bordlampa
+   - switch.tak_led
+  Kök: 
+   - switch.kokfonster
+   - switch.kok_glasskal
+   - light.kok_overskap
+  Sovrum:
+   - light.bedroom_window
+  Lekrum Klimat:
+   - sensor.lekrummet_temperature
+  Kaninbur Klimat:
+   - sensor.kaninbur_temperature
+   - sensor.kaninbur_humidity
+  Vinden Klimat:
+   - sensor.vinden_temperature
+   - sensor.vinden_humidity
+  Grunden Klimat: 
+   - switch.avfuktare
+   - sensor.grunden_temperature
+   - sensor.grunden_humidity
+   - sensor.grunden_2_temperature
+   - sensor.grunden_2_humidity
+  Förråd framsida Klimat:
+   - sensor.forrad_fram_temperature
+   - sensor.forrad_fram_humidity
+  Gustavs Rum:
+   - sensor.gustavsrum_temperature
+  Bryggeri:
+   - sensor.jastunna_temperature
+  Blommor Vardagsrummet:
+   - sensor.blomma_2
+  Kameror:
+   - camera.bjorko_live
+   - camera.cam1
+   - camera.cam_back
+  default_view:
+    view: yes
+    icon: mdi:toggle-switch 
+    entities:
+     - group.scenes
+     - group.vardagsrummet
+     - group.arbetsrum
+     - group.Hall
+     - group.kok
+     - group.sovrum
+  Klimat_view:
+    view: yes
+    icon: mdi:thermometer
+    entities:
+      - group.Ute_klimat
+      - group.vinden_klimat
+      - group.grunden_klimat
+      - group.vardagsrummet_klimat
+      - group.arbetsrum_klimat
+      - group.gustavs_rum
+      - group.kaninbur_klimat
+      - group.forrad_framsida_klimat
+  Blommor_view:
+    view: yes
+    icon: mdi:flower
+    entities:
+      - group.blommor_vardagsrummet
+  Kamera_view:
+    view: yes
+    icon: mdi:camcorder
+    entities:
+      - group.kameror
+      - switch.motion_door
+  Bryggeri_view:
+    view: yes
+    icon: mdi:beer
+    entities:
+      - group.bryggeri
+  Kalender_view:
+    view: yes
+    icon: mdi:calendar
+    entities:
+      - calendar.sitta_fram
+  Tracker_view:
+    view: yes
+    icon: mdi:account
+    entities:
+      - device_tracker.icka
+      - device_tracker.ola
+      - device_tracker.gustavsandstrom
+
+#INCLUDES
+########
+#notify: !include notify.yaml
+
+notify:
+  - name: !secret pushover_name1
+    platform: pushover
+    api_key: !secret pushover_api_key
+    user_key: !secret pushover_user_key

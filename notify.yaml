@@ -1,0 +1,22 @@
+#########################
+# Notifications
+#########################
+
+notify:
+  - name: ola
+    platform: pushover
+    api_key: !secrets pushover_api_key
+    user_key: !secrets pushover_user_key
+
+automation:
+  - alias: Check sensor value and show notification
+    trigger:
+      platform: numeric_state
+      entity_id: sensor.grunden_2_humidity
+      above: 50
+    action:
+      service: notify.ola
+      data:
+        message: "Sensor value greater than 50"
+        titel: "SE UPP"
+        priority: 0

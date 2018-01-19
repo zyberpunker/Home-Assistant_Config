@@ -1,0 +1,119 @@
+switch.vardagsrum_fonster:
+  hidden: true
+switch.vardagrrum_rod_kula:
+  hidden: true
+switch.vardagsrum_soffa:
+  hidden: true
+switch.golvlampa_old:
+  hidden: true
+switch.bordslamp:
+  hidden: true
+switch.kok_glasskal:
+  friendly_name: 'HögSkåp'
+light.kok_overskap:
+  friendly_name: 'Överskåp'
+switch.rrelse:
+  hidden: true
+switch.bordslampa:
+  hidden: true
+light.dimmer_2:
+  hidden: true
+light.arbetsrummet:
+  hidden: true
+light.sovrum:
+  hidden: true
+light.led_hall:
+  friendly_name: 'LED Garderob'
+sensor.arbetsrummet_humidity:
+  friendly_name: 'Fuktighet'
+  icon: mdi:water-percent
+sensor.arbetsrummet_temperature:
+  friendly_name: 'Temperatur'
+sensor.grunden_humidity:
+  friendly_name: 'Fuktighet'
+  icon: mdi:water-percent
+sensor.grunden_temperature:
+  friendly_name: 'Temperatur'
+sensor.frrd_fram_humidity:
+  friendly_name: 'Fuktighet'
+  icon: mdi:water-percent
+sensor.frrd_fram_temperature:
+  friendly_name: 'Temperatur'
+sensor.gustavsrum_temperature:
+  friendly_name: 'Temperatur'
+sensor.ute_humidity:
+  friendly_name: 'Fuktighet'
+  icon: mdi:water-percent
+sensor.ute_temperature:
+  friendly_name: 'Temperatur'
+sensor.vinden_humidity:
+  friendly_name: 'Fuktighet'
+  icon: mdi:water-percent
+sensor.vinden_temperature:
+  friendly_name: 'Temperatur'
+switch.kok_fonster:
+  friendly_name: 'Fönster (kass)'
+  hidden: true
+switch.kokfonster:
+  friendly_name: 'Window'
+#      hidden: true
+sensor.vardagsrummet_humidity:
+  friendly_name: 'Fuktighet'
+  icon: mdi:water-percent
+sensor.vardagsrummet_temperature:
+  friendly_name: 'Temperatur'
+light.bed_window:
+  friendly_name: 'Bedroom window'
+sensor.yr_cloudiness:
+  friendly_name: 'Molnighet'
+  icon: mdi:weather-partlycloudy
+sensor.pws_wind_dir:
+  friendly_name: 'Vindriktning'
+  icon: mdi:arrow-top-right
+sensor.vind:
+  friendly_name: 'Vindhastighet'
+  icon: mdi:weather-windy
+sensor.yr_fog:
+  friendly_name: 'Dimma'
+  icon: mdi:soundcloud
+sensor.blomma_2:
+  icon: mdi:flower
+sensor.kaninbur_humidity:
+  icon: mdi:water-percent
+sensor.pws_weather:
+  friendly_name: 'Väder'
+sensor.pws_precip_1hr_metric:
+  friendly_name: 'Nederbörd 1h'
+  icon: mdi:weather-rainy
+sensor.pws_uv:
+  icon: mdi:sunglasses
+sensor.byvind:
+  icon: mdi:weather-windy
+light.window_2:
+  friendly_name: 'Fönsterlampa'
+light.window:
+  friendly_name: 'Study window'
+light.ceiling:
+  friendly_name: 'Study Roof'
+switch.hall_bordlampa:
+  friendly_name: 'Hall lamp'
+switch.avfuktare:
+  friendly_name: 'Avfuktare Grund'
+light.hue_bloom_1:
+  friendly_name: 'Bloom 1'
+light.hue_bloom_2:
+  friendly_name: 'Bloom 2'
+switch.tak_led:
+  friendly_name: 'Hall roof LED'
+group.bloom:
+  friendly_name: 'Livingroom Bloom'
+group.livingroom_window:
+  friendly_name: 'Livingroom window'
+group.kok:
+  friendly_name: 'Kitchen'
+scene.natt:
+  friendly_name: 'Good night'
+scene.kvall:
+  friendly_name: 'Evening'
+switch.motion_door:
+  friendly_name: 'Motion Trigger Door'

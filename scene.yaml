@@ -1,0 +1,125 @@
+  - name: 'Släck Allt'
+    entities:
+      light.arbetsrummet_tak:
+        state: off
+      light.fonster:
+        state: off
+      switch.vardagsrum_fonster_1:
+        state: off
+      switch.kokfonster:
+        state: off
+      switch.vardagsrum_fonster_2:
+        state: off
+      switch.kok_glasskal:
+        state: off
+      light.golvlampa:
+        state: off
+      switch.tak_led:
+        state: off
+      light.bed_window:
+        state: off
+      light.kok_overskap:
+        state: off
+      switch.hall_bordlampa:
+        state: off
+      group.bloom:
+        state: off
+  - name: 'Tänd Allt'
+    entities:
+      light.arbetsrummet_tak:
+        state: on
+        brightness: 50
+      light.fonster:
+        state: on
+        brightness: 195
+      light.bed_window:
+        state: on
+        brightness: 195
+      switch.vardagsrum_fonster_1:
+        state: on
+      switch.kokfonster:
+        state: on
+      switch.vardagsrum_fonster_2:
+        state: on
+      switch.kok_glasskal:
+        state: on
+      light.golvlampa:
+        state: on
+      switch.tak_led:
+        state: on
+      light.kok_overskap:
+        state: on
+      switch.hall_bordlampa:
+        state: on 
+      light.hue_bloom_1:
+        state: on
+        brightness: 250
+        rgb_color: 237,204,160
+      light.hue_bloom_2:
+        state: on
+        brightness: 250
+        rgb_color: 237,204,160  
+  - name: 'Kväll'
+    entities:
+      light.window:
+        state: on
+        brightness: 195
+      light.bedroom_window: 
+        state: on
+        brightness: 195
+      switch.vardagsrum_fonster_1:
+        state: on
+      switch.kokfonster:
+        state: on
+      switch.vardagsrum_fonster_2:
+        state: on
+      switch.kok_glasskal:
+        state: on
+      light.golvlampa:
+        state: on
+        brightness: 55
+      switch.tak_led:
+        state: on
+      light.kok_overskap:
+        state: on
+      light.hue_bloom_1:
+        state: on
+        brightness: 170
+        rgb_color: 237,204,160
+      light.hue_bloom_2:
+        state: on
+        brightness: 170
+        rgb_color: 237,204,160
+  - name: 'Natt'
+    entities:
+      light.bedroom_window:
+        state: on
+        brightness: 100
+      light.ceiling:
+        state: off
+      light.window:
+        state: off
+      switch.vardagsrum_fonster_1:
+        state: off
+      switch.kokfonster:
+        state: off
+      switch.vardagsrum_fonster_2:
+        state: off
+      switch.kok_glasskal:
+        state: off
+      light.golvlampa:
+        state: off
+      switch.tak_led:
+        state: off   
+      light.kok_overskap:
+        state: off
+      switch.hall_bordlampa:
+        state: off
+      light.hue_bloom_1:
+        state: off
+      light.hue_bloom_2:
+        state: off
+  - name: 'Hall'
+    entities:
+      switch.hall_bordlampa:
+        state: on
