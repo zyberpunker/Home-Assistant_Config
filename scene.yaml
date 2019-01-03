@@ -20,9 +20,11 @@
         state: off
       light.kok_overskap:
         state: off
-      switch.hall_bordlampa:
+      light.hue_ambiance_candle_1:
         state: off
       group.bloom:
+        state: off
+      light.hue_color_lamp_1:
         state: off
   - name: 'Tänd Allt'
     entities:
@@ -49,7 +51,7 @@
         state: on
       light.kok_overskap:
         state: on
-      switch.hall_bordlampa:
+      light.hue_ambiance_candle_1:
         state: on 
       light.hue_bloom_1:
         state: on
@@ -58,7 +60,12 @@
       light.hue_bloom_2:
         state: on
         brightness: 250
-        rgb_color: 237,204,160  
+        rgb_color: 237,204,160
+      light.hue_color_lamp_1:
+        rgb_color: 255,207,120
+        brightness: 500
+      light.hall:
+        state: on
   - name: 'Kväll'
     entities:
       light.window:
@@ -84,17 +91,24 @@
         state: on
       light.hue_bloom_1:
         state: on
-        brightness: 170
-        rgb_color: 237,204,160
+        brightness: 45
+        rgb_color: [255,200,146]
       light.hue_bloom_2:
         state: on
-        brightness: 170
-        rgb_color: 237,204,160
+        brightness: 45
+        rgb_color: [255,200,146]
+      light.hue_color_lamp_1:
+        state: on
+        rgb_color: [255,207,120]
+        brightness: 280
+      light.hall:
+        state: on
+        brightness: 254 
+        color_temp: 366
   - name: 'Natt'
     entities:
       light.bedroom_window:
-        state: on
-        brightness: 100
+        state: off
       light.ceiling:
         state: off
       light.window:
@@ -113,13 +127,19 @@
         state: off   
       light.kok_overskap:
         state: off
-      switch.hall_bordlampa:
+      light.hue_ambiance_candle_1:
         state: off
       light.hue_bloom_1:
         state: off
       light.hue_bloom_2:
         state: off
+      light.hue_color_lamp_1:
+        state: off
+      light.hall:
+        state: off
+      light.hue_ambiance_panel_1:
+        state: off
   - name: 'Hall'
     entities:
-      switch.hall_bordlampa:
+      light.hue_ambiance_candle_1:
         state: on

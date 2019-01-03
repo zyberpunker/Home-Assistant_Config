@@ -1,0 +1,89 @@
+title: My Awesome Home
+# Optional background for all views. Check https://developer.mozilla.org/en-US/docs/Web/CSS/background for more examples.
+background: center / cover no-repeat url("/background.png") fixed
+# Exclude entities from "Unused entities" view
+excluded_entities:
+  - weblink.router
+views:
+    # View tab title.
+  - icon: mdi:cloud
+    title: Hem
+    # Optional unique id for direct access /lovelace/${id}
+    id: hem
+    # Optional background (overwrites the global background).
+    background: white
+    # Each view can have a different theme applied. Theme should be defined in the frontend.
+    theme: dark-mode
+    # The cards to show on this view.
+    cards:
+        # The filter card will filter entities for their state
+      - type: glance
+        entities:
+          - weather.smhi_hono
+
+      - type: sensor
+        name: Grunden Fuktighet 12h
+        graph: line
+        hight: 75
+        line_color: "#3498db"
+        line_width: 3
+        hours_to_show: 12
+        entity: sensor.grunden_humidity
+
+      - type: sensor
+        name: Grunden Fuktighet 2 12h
+        graph: line
+        hight: 75
+        line_color: "#3498db"
+        line_width: 3
+        hours_to_show: 12
+        entity: sensor.grunden_2_humidity        
+
+    # View tab title.
+  - icon: mdi:lightbulb-on-outline
+    title: Lights
+    # Optional unique id for direct access /lovelace/${id}
+    id: lights
+    # Optional background (overwrites the global background).
+    #background: radial-gradient(crimson, skyblue)
+    # Each view can have a different theme applied. Theme should be defined in the frontend.
+    theme: dark-mode
+    # The cards to show on this view.
+    cards:
+        # The filter card will filter entities for their state
+      - type: entities
+        entities:
+          - scene.slack_allt
+          - scene.natt
+          - scene.kvall
+          - scene.tand_allt
+      
+      - type: light
+        entity: light.bedroom_window
+        
+
+    # Specify a tab icon if you want the view tab to be an icon.
+  - icon: mdi:home-assistant
+    # Title of the view. Will be used as the tooltip for tab icon
+    title: Second view
+    cards:
+        # Entities card will take a list of entities and show their state.
+      - type: entities
+        # Title of the entities card
+        title: Example
+        # The entities here will be shown in the same order as specified.
+        # Each entry is an entity ID or a map with extra options.
+        entities:
+          - light.kitchen
+          - switch.ac
+          - entity: light.living_room
+            # Override the name to use
+            name: LR Lights
+
+        # The markdown card will render markdown text.
+      - type: markdown
+        title: Lovelace
+        content: >
+          Welcome to your **Lovelace UI**.
+
+

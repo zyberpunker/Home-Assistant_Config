@@ -1,57 +1,50 @@
-  - alias: Turn on light before sun sets
-    trigger:
-      - platform: sun
-        event: sunset
-        offset: "-01:20:00"
-    action:
-      service: scene.turn_on
-      entity_id: scene.kvall
-  - alias: Turn off after sun rise
-    trigger:
-      - platform: sun
-        event: sunrise
-        offset: "01:00:00"
-    action:
-       service: scene.turn_on
-       entity_id: scene.slack_allt 
-  - alias: Check sensor value and show notification
-    trigger:
-      platform: numeric_state
-      entity_id: sensor.grunden_2_humidity
-      above: 75
-    action:
-      service: notify.ola
-      data:
-        message: "Kontrollera avfuktare"
-  - alias: Turn on light hallway
-    trigger:
-      platform: sun
-      event: sunset
-      offset: "-02:00:00"
-    action:
-      service: scene.turn_on
-      entity_id: scene.hall
-  - alias: Turn on dryer
-    trigger: 
-      platform: numeric_state
-      entity_id: sensor.grunden_humidity
-      above: 75
-    action:
-      service: switch.turn_on
-      entity_id: switch.avfuktare
-  - alias: Turn off dryer
-    trigger: 
-      platform: numeric_state
-      entity_id: sensor.grunden_humidity
-      below: 67
-    action:
-      service: switch.turn_off
-      entity_id: switch.avfuktare
-  - alias: MQTT test
-    trigger:
-      platform: mqtt
-      topic: hass/test
-      payload: 'hej'
-    action:
-      service: switch.turn_on
-      entity_id: light.ceiling
+- alias: Turn on light before sun sets
+  trigger:
+  - platform: sun
+    event: sunset
+    offset: -01:20:00
+  action:
+    service: scene.turn_on
+    entity_id: scene.kvall
+  id: a4763515cd5c49c5988768c63a3d3481
+- alias: Turn off after sun rise
+  trigger:
+  - platform: sun
+    event: sunrise
+    offset: 01:00:00
+  action:
+    service: scene.turn_on
+    entity_id: scene.slack_allt
+  id: 325c54a7e2bf4ab3b15cda6db9cb461d
+- id: b1e095168ce24f4c9b635fc3440ac2ee
+  alias: Motion on
+  trigger:
+  - entity_id: switch.rorelse
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: light.hue_ambiance_panel_1
+    state: 'off'
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - service: light.turn_on
+    data:
+      brightness: 51
+      color_temp: 399
+      entity_id: light.hue_ambiance_panel_1
+  - service: homeassistant.turn_off
+    data:
+      entity_id: switch.rorelse
+- id: 7a5fcd8b7439409c880a96316201f9a8
+  alias: Motion Sensor Lights Off
+  trigger:
+  - entity_id: switch.rorelse
+    for: 0:03:00
+    platform: state
+    to: 'off'
+  action:
+  - entity_id: light.hue_ambiance_panel_1
+    service: homeassistant.turn_off

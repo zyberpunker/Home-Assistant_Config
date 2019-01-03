@@ -30,9 +30,9 @@ config:
 #  track_new_calendar: false
 
 influxdb:
-  host: 192.168.0.4
+  host: !secret host_influx
   port: 8086
-  database: grafana
+  database: hass
   username: !secret influx_user
   password: !secret influx_pass
   ssl: false
@@ -41,33 +41,32 @@ influxdb:
     instance: prod
     source: hass
 
-mqtt:
-  broker: 192.168.0.4
-  port: 1883
-  protocol: 3.1
-  username: !secret mqtt_user
-  password: !secret mqtt_pass
-  discovery: true
-  client_id: home-assistant-1
-  keepalive: 60
-  birth_message:
-    topic: 'hass/status'
-    payload: 'online'
-    qos: 1
-    retain: true
-  will_message:
-    topic: 'hass/status'
-    payload: 'offline'
-    qos: 1
-    retain: true
+#mqtt:
+#  broker: 192.168.0.4
+#  port: 1883
+#  protocol: 3.1
+#  username: !secret mqtt_user
+#  password: !secret mqtt_pass
+#  discovery: true
+#  client_id: home-assistant-1
+#  keepalive: 60
+#  birth_message:
+#    topic: 'hass/status'
+#    payload: 'online'
+#    qos: 1
+#    retain: true
+#  will_message:
+#    topic: 'hass/status'
+#    payload: 'offline'
+#    qos: 1
+#    retain: true
 
-#device_tracker:
-#  - platform: unifi
-#    username: !secret devtrack_user
-#    password: !secret devtrack_pass
-#    host: 192.168.0.20
-#    verify_ssl: false
-#    consider_home: 180
+device_tracker:
+  - platform: unifi
+    username: !secret devtrack_user
+    password: !secret devtrack_pass
+    host: !secret host_unifi
+    verify_ssl: false
 
 #logger:
 #  default: info
@@ -120,29 +119,41 @@ camera:
 camera 3:
   - platform: ffmpeg
     ffmpeg_bin: /usr/bin/avconv
-    input: -rtsp_transport udp -i rtsp://admin:123@192.168.0.50:554/onvif1
-    name: cam_back
+    input: -rtsp_transport udp -i rtsp://hass:hass@192.168.0.51:554/user=hass_password=hass_channel=1_stream=0.sdp?real_stream
+    name: frontdoor
     extra_arguments: -pred 1
+
 hue:
   bridges:
-    - host: 192.168.0.100
+    - host: !secret host_hue
       filename: phue.conf
 
 switch:
   - platform: tellstick
 
+switch 2:
+  - platform: broadlink
+    host: 192.168.1.35
+    mac: '34:ea:34:40:96:f5'
+    switches:
+      tv:
+          friendly_name: "TV"
+          command_on: JgCEAxMtEi8SLhMuEi4TLRMuEi4TAAfWkpQQEBEQEBARDxEwERAQEBEQEBAQERAQERAQEBEQEBARDxCTEQ8REBEPERAQEBEQEBAREBEPERARDxARES8RMBEvEDEQMBEvETAQMBAAB9mSlBEPERAQEBEPETAREBAQERAQEBEQEBAREBAQERAQEBAQEZIRDxEQEBAQEREPERAQEBARERAQEBAREBARLxAxEi4RMBEvEDASLxIuEgAHnZOTEg4TDhIPEg4SLhMOEg4TDhIPEg4SDxIOEg8SDhIPEg4SkBMOEg8SDhIPEg4SDxIOEg8SDhIPEg4SDhMuEi4SLhMuEi4SLxIuEi8SAAfWlZESDxIOEg8SDhIvEg4SDxIOEg8SDhIPEg4SDxIOEg8SDhKQEw4SDhMOEg4TDhIOEw4SDxIOEg8SDhIOEi8SLhIuEy4SLhIvEi4SLhMAB9aVkRIPEg4SDxIOEi8SDhIPEg4SDxIOEg8SDhIPEg4SDxIOEpATDhIOEw4SDhMOEg4TDhIOEw4SDxIOEg4SLhMuEi4SLxIuEi8SLhIuEwAHnZSREw4SDxIOEg4SLxIOEw4SDhMOEg4TDhIOEw4SDhMOEg4SkRIOEg8SDhIPEg4TDhIOEw4SDhMOEg4TDhIuEi8SLhIuEy4SLhIuEy4SAAfZk5MSDhIPEg4TDhIuEg8SDhIPEg4TDhIOEw4SDhMOEg4TDhKQEg8SDhIPEg4SDxIOEg8SDhEQEg4REBEPES8QMRAwEDEQMBAwEDEQMBAAB9uTkxMOEg4TDhMNEi8SDhIPEg4SDxIOEw4SDhIPEg4TDhIOEpATDhIOEg8SDxEPEg8RDxIPEQ8SDxEPEg4SLxEvEDAQMRAwEDEQMBAxEAAH25KTEw4SDhIPEg4SLxIOEw4SDhIPEg4SDxIOEg8SDhMOEg4SkRIOEg8SDhIPEg4SDxIOEg8SDhIPEg4SDxIuEi4TLhIuEi8SLhIuEy4SAAfZkpMTDhIPEg4SDhMuEg8SDhIPEg4SDxIOEg8SDhIPEg4SDhOQEg4TDhIOEw4SDhMOEg8SDhIPEg4TDhIOEi4SLxIuEi8SLhIuEy4SLhIAB9mTkxIPEg4SDxIOEi8SDhIPEg4SDxIOEg8SDhIPEg4SDxIOEpATDhIOEw4SDhMOEg4TDhIOEw4SDhMOEg4SLhMuEi4TLhIuEi8SLhIuEwANBQAAAAA=
+          command_off: JgCEAxMtEi8SLhMuEi4TLRMuEi4TAAfWkpQQEBEQEBARDxEwERAQEBEQEBAQERAQERAQEBEQEBARDxCTEQ8REBEPERAQEBEQEBAREBEPERARDxARES8RMBEvEDEQMBEvETAQMBAAB9mSlBEPERAQEBEPETAREBAQERAQEBEQEBAREBAQERAQEBAQEZIRDxEQEBAQEREPERAQEBARERAQEBAREBARLxAxEi4RMBEvEDASLxIuEgAHnZOTEg4TDhIPEg4SLhMOEg4TDhIPEg4SDxIOEg8SDhIPEg4SkBMOEg8SDhIPEg4SDxIOEg8SDhIPEg4SDhMuEi4SLhMuEi4SLxIuEi8SAAfWlZESDxIOEg8SDhIvEg4SDxIOEg8SDhIPEg4SDxIOEg8SDhKQEw4SDhMOEg4TDhIOEw4SDxIOEg8SDhIOEi8SLhIuEy4SLhIvEi4SLhMAB9aVkRIPEg4SDxIOEi8SDhIPEg4SDxIOEg8SDhIPEg4SDxIOEpATDhIOEw4SDhMOEg4TDhIOEw4SDxIOEg4SLhMuEi4SLxIuEi8SLhIuEwAHnZSREw4SDxIOEg4SLxIOEw4SDhMOEg4TDhIOEw4SDhMOEg4SkRIOEg8SDhIPEg4TDhIOEw4SDhMOEg4TDhIuEi8SLhIuEy4SLhIuEy4SAAfZk5MSDhIPEg4TDhIuEg8SDhIPEg4TDhIOEw4SDhMOEg4TDhKQEg8SDhIPEg4SDxIOEg8SDhEQEg4REBEPES8QMRAwEDEQMBAwEDEQMBAAB9uTkxMOEg4TDhMNEi8SDhIPEg4SDxIOEw4SDhIPEg4TDhIOEpATDhIOEg8SDxEPEg8RDxIPEQ8SDxEPEg4SLxEvEDAQMRAwEDEQMBAxEAAH25KTEw4SDhIPEg4SLxIOEw4SDhIPEg4SDxIOEg8SDhMOEg4SkRIOEg8SDhIPEg4SDxIOEg8SDhIPEg4SDxIuEi4TLhIuEi8SLhIuEy4SAAfZkpMTDhIPEg4SDhMuEg8SDhIPEg4SDxIOEg8SDhIPEg4SDhOQEg4TDhIOEw4SDhMOEg8SDhIPEg4TDhIOEi4SLxIuEi8SLhIuEy4SLhIAB9mTkxIPEg4SDxIOEi8SDhIPEg4SDxIOEg8SDhIPEg4SDxIOEpATDhIOEw4SDhMOEg4TDhIOEw4SDhMOEg4SLhMuEi4TLhIuEi8SLhIuEwANBQAAAAA=
+
 sensor:
   - platform: tellstick
     151: Vinden
-    154: Förråd_fram 
+    185: Förråd_fram 
     166: Ute
     21: Grunden
     222: Arbetsrummet
     51: Vardagsrummet
-    245: Gustavsrum
+    23: Gustavsrum
     167: Jästunna
     150: Grunden_2
     199: Kaninbur
+    14: Sovrummet
     # Set only_named to 1 to hide all sensors that you did not mention.
     only_named: 1
 
@@ -168,6 +179,7 @@ sensor 4:
   pws_id: ICKERMUN2
   value_template: "{{(sensor.pws_wind_kph | float *  0.27777777777778)  | round(2) }}"
   monitored_conditions:
+    - temp_c
     - precip_1hr_metric
     - precip_today_metric
     - pressure_mb
@@ -195,11 +207,13 @@ sensor 5:
 light 2:
   platform: tellstick
 
-#light 3:
-#  - platform: flux_led
-#    devices:
-#      192.168.0.101:
-#        name: LED_Hall
+light 3:
+  - platform: flux_led
+    automatic_add: True
+    devices:
+      192.168.0.101:
+        name: "Grovkök LED"
+        mode: "rgbw"
 
 automation: !include automations.yaml
 scene: !include scene.yaml
@@ -222,6 +236,7 @@ group:
   Ute Klimat:
    - sensor.pws_weather
    - sensor.ute_temperature
+   - sensor.pws_temp_c
    - sensor.ute_humidity
    - sensor.yr_fog
    - sensor.pws_wind_dir
@@ -245,14 +260,20 @@ group:
    - sensor.arbetsrummet_temperature
    - sensor.arbetsrummet_humidity
   Hall:
-   - switch.hall_bordlampa
+   - light.hue_ambiance_candle_1
+  Tvättstuga:
    - switch.tak_led
+   - light.hue_ambiance_panel_1
   Kök: 
    - switch.kokfonster
    - switch.kok_glasskal
    - light.kok_overskap
+   - light.hue_color_lamp_1
   Sovrum:
    - light.bedroom_window
+  Sovrum klimat: 
+   - sensor.sovrummet_temperature
+   - sensor.sovrummet_humidity
   Lekrum Klimat:
    - sensor.lekrummet_temperature
   Kaninbur Klimat:
@@ -272,6 +293,7 @@ group:
    - sensor.forrad_fram_humidity
   Gustavs Rum:
    - sensor.gustavsrum_temperature
+   - sensor.gustavsrum_humidity
   Bryggeri:
    - sensor.jastunna_temperature
   Blommor Vardagsrummet:
@@ -279,6 +301,7 @@ group:
   Kameror:
    - camera.bjorko_live
    - camera.cam1
+   - camera.frontdoor
    - camera.cam_back
   default_view:
     view: yes
@@ -290,6 +313,7 @@ group:
      - group.Hall
      - group.kok
      - group.sovrum
+     - group.tvattstuga
   Klimat_view:
     view: yes
     icon: mdi:thermometer
@@ -302,6 +326,7 @@ group:
       - group.gustavs_rum
       - group.kaninbur_klimat
       - group.forrad_framsida_klimat
+      - group.sovrum_klimat
   Blommor_view:
     view: yes
     icon: mdi:flower
@@ -327,9 +352,7 @@ group:
     view: yes
     icon: mdi:account
     entities:
-      - device_tracker.icka
-      - device_tracker.ola
-      - device_tracker.gustavsandstrom
+      - device_tracker.huawei_p20_prob6fa481412
 
 #INCLUDES
 ########
